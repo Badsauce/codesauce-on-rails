@@ -1,0 +1,9 @@
+I, [2015-10-07T11:44:44.493912 #24141]  INFO -- : Refreshing Gem list
+I, [2015-10-07T11:44:46.214087 #24141]  INFO -- : listening on addr=/home/badsauce/codesauce/shared/sockets/unicorn.sock fd=11
+I, [2015-10-07T11:44:46.214290 #24141]  INFO -- : worker=0 spawning...
+I, [2015-10-07T11:44:46.216995 #24141]  INFO -- : worker=1 spawning...
+I, [2015-10-07T11:44:46.218800 #24141]  INFO -- : master process ready
+I, [2015-10-07T11:44:46.225825 #24146]  INFO -- : worker=0 spawned pid=24146
+I, [2015-10-07T11:44:46.227535 #24148]  INFO -- : worker=1 spawned pid=24148
+I, [2015-10-07T11:44:46.235141 #24146]  INFO -- : worker=0 ready
+I, [2015-10-07T11:44:46.241851 #24148]  INFO -- : worker=1 ready

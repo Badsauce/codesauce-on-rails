@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'static#index'
+  get '/ecommerce', to: 'static#ecommerce_index'
+  get '/ecommerce/lab1', to: 'static#ecommerce_lab_1'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

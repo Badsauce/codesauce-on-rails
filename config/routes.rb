@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   root 'static#index'
   get '/ecommerce', to: 'static#ecommerce_index'
   get '/ecommerce/lab1', to: 'static#ecommerce_lab_1'
+  get '/ecommerce/lab2', to: 'static#ecommerce_lab_2'
+  post '/ecommerce/lab2', to: 'static#ecommerce_lab_2'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -1,0 +1,56 @@
+<div class="container">
+  <h1>Lab 2</h1>
+
+  <% @missing_required_fields.each do |item|%>
+    <p> <%= item %> is a required field </p>
+  <% end %>
+
+  <% unless @email_is_valid %>
+    <p>Email is not valid</p>
+  <% end %>
+
+  <% if @is_valid %>
+    <h2>Submission Sucessful!</h2>
+    <p>Name: <%= sanitize @form_data[:name] %>
+    <p>Email: <%= sanitize @form_data[:email] %>
+    <p>Experince: <%= sanitize @form_data[:experince] %>
+    <p>Interest Level: <%= sanitize @form_data[:interest] %>
+  <% end %>
+
+  <%= form_tag("#", method: "post", class: "ecomm-interest-form") do %>
+  <%= label_tag(:name, "*Name:") %>
+  <%= text_field_tag(:name) %>
+  <br>
+
+  <%= label_tag(:email, "*Email:") %>
+  <%= text_field_tag(:email) %>
+  <br>
+
+  <%= label_tag(:experince, "Describe your previous experince writing code:") %>
+  <%= text_area_tag(:experince) %>
+  <br>
+
+  *How interested would you be in being taught to create web applications?
+  <br>
+  <%= radio_button_tag(:interest, "1") %>
+  <%= label_tag(:interest_1, "No thanks.") %>
+  <br>
+  <%= radio_button_tag(:interest, "2") %>
+  <%= label_tag(:interest_2, "Only a little bit.") %>
+  <br>
+  <%= radio_button_tag(:interest, "3") %>
+  <%= label_tag(:interest_3, "Where can I learn more?") %>
+  <br>
+  <%= radio_button_tag(:interest, "4") %>
+  <%= label_tag(:interest_4, "Totally!") %>
+  <br>
+  <%= radio_button_tag(:interest, "5") %>
+  <%= label_tag(:interest_5, "Where do I sign up?") %>
+  <br>
+
+  <%= submit_tag("Submit") %>
+
+  <br>
+  * Required Fields
+<% end %>
+</div>

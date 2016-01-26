@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get '/ecommerce/lab1', to: 'static#ecommerce_lab_1'
   get '/ecommerce/lab2', to: 'static#ecommerce_lab_2'
   post '/ecommerce/lab2', to: 'static#ecommerce_lab_2'
+  get '/ecommerce/lab3', to: 'static#ecommerce_lab_3'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

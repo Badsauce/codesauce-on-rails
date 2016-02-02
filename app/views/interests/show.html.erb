@@ -1,0 +1,17 @@
+<p>
+  <strong>Name:</strong>
+  <%= @interest.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @interest.email %>
+</p>
+
+<p>
+  <strong>Experince:</strong>
+  <%= @interest.experince %>
+</p>
+
+<%= link_to 'Submit another form', new_interest_path %>
+<%= link_to 'View all submissions', interests_path %>

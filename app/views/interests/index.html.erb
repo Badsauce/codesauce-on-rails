@@ -1,0 +1,19 @@
+<h1>Submitted forms</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Interest</th>
+  </tr>
+
+  <% @interests.each do |interest| %>
+    <tr>
+      <td><%= interest.name %></td>
+      <td><%= interest.email %></td>
+      <td><%= interest.experince %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Submit another form', new_interest_path %>

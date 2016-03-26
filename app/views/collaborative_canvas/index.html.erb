@@ -87,7 +87,9 @@
       };
 
       $.get('/collaborative_canvas/history', function( data ) {
-        canvasHistory = data.history;
+        if(data.history){
+          canvasHistory = data.history;  
+        }
         redraw()
       });
     </script>

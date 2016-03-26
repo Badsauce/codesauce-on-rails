@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'collaborative_canvas/index'
+  get 'collaborative_canvas/history'
+  post 'collaborative_canvas/history', to: 'collaborative_canvas#add_history'
+
   resources :interests
   #resources :tasks
   # The priority is based upon order of creation: first created -> highest priority.

@@ -37,9 +37,9 @@ class StaticController < ApplicationController
       @is_valid = false
     end
 
-    def ecommerce_lab_3
+  end
 
-    end
+  def ecommerce_lab_3
 
   end
 

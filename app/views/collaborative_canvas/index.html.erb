@@ -1,0 +1,93 @@
+<div id="CanvasContainer">
+      <canvas id="CollaborativeCanvas"></canvas>
+    </div>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>
+      var canvas = document.getElementById('CollaborativeCanvas');
+      var context = canvas.getContext('2d');
+
+      var painting = document.getElementById('CanvasContainer');
+      var paint_style = getComputedStyle(painting);
+      canvas.width = parseInt(paint_style.getPropertyValue('width'));
+      canvas.height = parseInt(paint_style.getPropertyValue('height'));
+
+      var mouse = {x: 0, y: 0};
+      var clickX = new Array();
+      var clickY = new Array();
+      var clickDrag = new Array();
+      var canvasHistory = new Array();
+      var color = '#00CC99';
+      var isPainting;
+      var id = 1;
+
+      canvas.addEventListener('mousemove', function(e) {
+        mouse.x = e.pageX - this.offsetLeft;
+        mouse.y = e.pageY - this.offsetTop;
+
+        if(isPainting){
+          addClick(mouse.x, mouse.y, true, color);
+          redraw();
+        }
+      }, false);
+
+      function addClick(x, y, dragging, brush_color)
+      {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+        canvasHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
+      }
+
+      var historyPost;
+
+      function redraw(){
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+        context.strokeStyle = color;
+        context.lineJoin = "round";
+        context.lineWidth = 5;
+
+        for(var i=0; i < canvasHistory.length; i++) {
+          context.beginPath();
+          if(canvasHistory[i].drag && i){
+            context.moveTo(canvasHistory[i-1].x, canvasHistory[i-1].y);
+           }else{
+             context.moveTo(canvasHistory[i].x-1, canvasHistory[i].y);
+           }
+           context.lineTo(canvasHistory[i].x, canvasHistory[i].y);
+           context.closePath();
+           context.stroke();
+        }
+        $.ajax({
+          method: "POST",
+          url: "/collaborative_canvas/history",
+          data: JSON.stringify({'id':id,'history':canvasHistory}),
+          contentType: 'application/json',
+        })
+        .done(function( data ) {console.log(data); historyPost = data});
+      }
+
+      canvas.addEventListener('mousedown', function(e) {
+        isPainting = true;
+        addClick(mouse.x, mouse.y);
+        redraw();
+      }, false);
+
+      canvas.addEventListener('mouseup', function() {
+        isPainting = false;
+      }, false);
+
+      canvas.addEventListener('mouseleave', function() {
+        isPainting = false;
+      }, false);
+
+      var onPaint = function() {
+        context.lineTo(mouse.x, mouse.y);
+        context.stroke();
+      };
+
+      $.get('/collaborative_canvas/history', function( data ) {
+        canvasHistory = data.history;
+        redraw()
+      });
+    </script>

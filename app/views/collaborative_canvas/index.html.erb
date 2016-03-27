@@ -16,6 +16,7 @@
       var clickY = new Array();
       var clickDrag = new Array();
       var canvasHistory = new Array();
+      var unsentHistory = new Array();
       var color = '#00CC99';
       var isPainting;
       var id = 1;
@@ -36,6 +37,7 @@
         clickY.push(y);
         clickDrag.push(dragging);
         canvasHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
+        unsentHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
       }
 
       function redraw(){
@@ -87,22 +89,48 @@
           console.log('History set to server history');
         });
       }
-      
-      function synchronizeHistory(){
-        $.ajax({
+
+      function sendHistory(){
+        return $.ajax({
           method: "POST",
           url: "/collaborative_canvas/history",
-          data: JSON.stringify({'id':id,'history':canvasHistory}),
+          data: JSON.stringify({'id':id,'history':unsentHistory}),
           contentType: 'application/json',
-        })
-        .done(function( data ) {
+        }).done(function( data ) {
+          unsentHistory = new Array();
           console.log('History written, receiving updated history');
           getHistory().done( function(){
             window.setTimeout(synchronizeHistory, 500);
           });
         });
+      }
 
+      function clearHistory(){
+        unsentHistory = new Array();
+        unsentHistory = new Array();
+        return $.ajax({
+          method: "POST",
+          url: "/collaborative_canvas/overwrite_history",
+          data: JSON.stringify({'id':id,'history':unsentHistory}),
+          contentType: 'application/json',
+        }).done(function( data ) {
+          unsentHistory = new Array();
+          console.log('History written, receiving updated history');
+          getHistory().done( function(){
+            window.setTimeout(synchronizeHistory, 500);
+          });
+        });
+      }
 
+      function synchronizeHistory(){
+        if(unsentHistory.length > 0){
+          sendHistory();
+        }
+        else {
+          getHistory().done( function(){
+            window.setTimeout(synchronizeHistory, 500);
+          });
+        }
       }
 
       getHistory()

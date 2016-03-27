@@ -10,10 +10,20 @@ class CollaborativeCanvasController < ApplicationController
     render :json => @history
   end
 
+  #POST collaborative_canvas/overwrite_history
+  def overwrite_history
+    @history = History.find(params['id'])
+    @history.history = params['history']
+  end
+
   #POST collaborative_canvas/history
   def add_history
     @history = History.find(params['id'])
-    @history.history = params['history']
+    if @history.history
+      @history.history += params['history']
+    else
+      @history.history = params['history']
+    end
 
     @response = Hash["status" => 'Failed']
 

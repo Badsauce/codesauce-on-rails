@@ -10,10 +10,13 @@ class CollaborativeCanvasController < ApplicationController
     render :json => @history
   end
 
-  #POST collaborative_canvas/overwrite_history
-  def overwrite_history
+  #POST collaborative_canvas/clear_history
+  def clear_history
     @history = History.find(params['id'])
-    @history.history = params['history']
+    @history.history = []
+    @history.save
+    @response = Hash["status" => 'History Cleared']
+    render :json => @response
   end
 
   #POST collaborative_canvas/history

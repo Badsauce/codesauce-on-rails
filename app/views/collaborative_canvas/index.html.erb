@@ -1,10 +1,12 @@
 <div id="CanvasContainer">
       <canvas id="CollaborativeCanvas"></canvas>
     </div>
+    <button id="clearHistory">Clear</button>
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>
       var canvas = document.getElementById('CollaborativeCanvas');
       var context = canvas.getContext('2d');
+      var clearButton = document.getElementById('clearHistory');
 
       var painting = document.getElementById('CanvasContainer');
       var paint_style = getComputedStyle(painting);
@@ -20,6 +22,9 @@
       var color = '#00CC99';
       var isPainting;
       var id = 1;
+      var syncTimer;
+
+
 
       canvas.addEventListener('mousemove', function(e) {
         mouse.x = e.pageX - this.offsetLeft;
@@ -108,19 +113,21 @@
       function clearHistory(){
         unsentHistory = new Array();
         unsentHistory = new Array();
+        window.clearTimeout(syncTimer);
         return $.ajax({
           method: "POST",
-          url: "/collaborative_canvas/overwrite_history",
-          data: JSON.stringify({'id':id,'history':unsentHistory}),
+          url: "/collaborative_canvas/clear_history",
+          data: JSON.stringify({'id':id}),
           contentType: 'application/json',
         }).done(function( data ) {
-          unsentHistory = new Array();
           console.log('History written, receiving updated history');
           getHistory().done( function(){
-            window.setTimeout(synchronizeHistory, 500);
+            syncTimer = window.setTimeout(synchronizeHistory, 500);
           });
         });
       }
+
+      clearButton.addEventListener('click', clearHistory , false);
 
       function synchronizeHistory(){
         if(unsentHistory.length > 0){
@@ -128,13 +135,13 @@
         }
         else {
           getHistory().done( function(){
-            window.setTimeout(synchronizeHistory, 500);
+            syncTimer = window.setTimeout(synchronizeHistory, 500);
           });
         }
       }
 
       getHistory()
-      window.setTimeout(synchronizeHistory, 500);
+      syncTimer = window.setTimeout(synchronizeHistory, 500);
 
 
     </script>

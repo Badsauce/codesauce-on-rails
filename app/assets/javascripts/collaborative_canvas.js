@@ -31,32 +31,25 @@ function addClick(x, y, dragging, brush_color)
 }
 
 function redraw(){
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
   context.strokeStyle = color;
   context.lineJoin = "round";
   context.lineWidth = 5;
 
-  for(var i=0; i < canvasHistory.length; i++) {
-    context.beginPath();
-    if(canvasHistory[i].drag && i){
-      context.moveTo(canvasHistory[i-1].x, canvasHistory[i-1].y);
-     }else{
-       context.moveTo(canvasHistory[i].x-1, canvasHistory[i].y);
-     }
-     context.lineTo(canvasHistory[i].x, canvasHistory[i].y);
-     context.closePath();
-     context.stroke();
-  }
+  drawHistory(canvasHistory);
+  drawHistory(serverHistory);
+}
 
-  for(var i=0; i < serverHistory.length; i++) {
+function drawHistory(history){
+  for(var i=0; i < history.length; i++) {
     context.beginPath();
-    if(serverHistory[i].drag && i){
-      context.moveTo(serverHistory[i-1].x, serverHistory[i-1].y);
+    if(history[i].drag && i){
+      context.moveTo(history[i-1].x, history[i-1].y);
      }else{
-       context.moveTo(serverHistory[i].x-1, serverHistory[i].y);
+       context.moveTo(history[i].x-1, history[i].y);
      }
-     context.lineTo(serverHistory[i].x, serverHistory[i].y);
+     context.lineTo(history[i].x, history[i].y);
      context.closePath();
      context.stroke();
   }

@@ -27,17 +27,6 @@ var id = 1;
 var syncTimerID;
 
 
-
-canvas.addEventListener('mousemove', function(e) {
-  mouse.x = e.pageX - this.offsetLeft;
-  mouse.y = e.pageY - this.offsetTop;
-
-  if(isPainting){
-    addClick(mouse.x, mouse.y, true, color);
-    redraw();
-  }
-}, false);
-
 function addClick(x, y, dragging, brush_color)
 {
   canvasHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
@@ -76,25 +65,10 @@ function redraw(){
   }
 }
 
-canvas.addEventListener('mousedown', function(e) {
-  isPainting = true;
-  addClick(mouse.x, mouse.y);
-  redraw();
-}, false);
-
-canvas.addEventListener('mouseup', function() {
-  isPainting = false;
-}, false);
-
-canvas.addEventListener('mouseleave', function() {
-  isPainting = false;
-}, false);
-
 var onPaint = function() {
   context.lineTo(mouse.x, mouse.y);
   context.stroke();
 };
-
 
 function getHistory(){
   return $.get('/collaborative_canvas/history', function( data ) {
@@ -154,8 +128,6 @@ function toggleHistoryID(){
   console.log("Writing ID: "+myHistoryID+" Reading ID: "+partnerHistoryID);
 }
 
-clearButton.addEventListener('click', clearHistory , false);
-
 function synchronizeHistory(){
   if(unsentHistory.length > 0){
     sendHistory();
@@ -166,6 +138,32 @@ function synchronizeHistory(){
     });
   }
 }
+
+canvas.addEventListener('mousemove', function(e) {
+  mouse.x = e.pageX - this.offsetLeft;
+  mouse.y = e.pageY - this.offsetTop;
+
+  if(isPainting){
+    addClick(mouse.x, mouse.y, true, color);
+    redraw();
+  }
+}, false);
+
+canvas.addEventListener('mousedown', function(e) {
+  isPainting = true;
+  addClick(mouse.x, mouse.y);
+  redraw();
+}, false);
+
+canvas.addEventListener('mouseup', function() {
+  isPainting = false;
+}, false);
+
+canvas.addEventListener('mouseleave', function() {
+  isPainting = false;
+}, false);
+
+clearButton.addEventListener('click', clearHistory , false);
 
 getHistory()
 syncTimerID = window.setTimeout(synchronizeHistory, 500);

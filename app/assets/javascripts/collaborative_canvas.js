@@ -149,7 +149,6 @@ function toggleHistoryID(){
   console.log("Writing ID: "+myHistoryID+" Reading ID: "+partnerHistoryID);
 }
 
-toggleButton.addEventListener('click', toggleHistoryID , false);
 clearButton.addEventListener('click', clearHistory , false);
 
 function synchronizeHistory(){

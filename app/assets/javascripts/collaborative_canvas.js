@@ -1,13 +1,17 @@
-var canvas = document.getElementById('CollaborativeCanvas');
-var context = canvas.getContext('2d');
-var clearButton = document.getElementById('clearHistory');
-var toggleButton = document.getElementById('toggleHistoryID');
-
+//Get elements we need
 var painting = document.getElementById('CanvasContainer');
+var canvas = document.getElementById('CollaborativeCanvas');
+var clearButton = document.getElementById('clearHistory');
+
+//initalize the canvas
+var context = canvas.getContext('2d');
+
+//Set the canvas to the size of it's container
 var paint_style = getComputedStyle(painting);
 canvas.width = parseInt(paint_style.getPropertyValue('width'));
 canvas.height = parseInt(paint_style.getPropertyValue('height'));
 
+//Object for capturing mouse movements within the canvas
 var mouse = {x: 0, y: 0};
 
 var myHistoryID = 1;
@@ -16,10 +20,11 @@ var partnerHistoryID = 2;
 var canvasHistory = new Array();
 var unsentHistory = new Array();
 var partnerHistory = new Array();
+
 var color = '#00CC99';
 var isPainting;
 var id = 1;
-var syncTimer;
+var syncTimerID;
 
 
 
@@ -128,7 +133,7 @@ function clearHistory(){
   canvasHistory = new Array();
   unsentHistory = new Array();
   partnerHistory = new Array();
-  window.clearTimeout(syncTimer);
+  window.clearTimeout(syncTimerID);
   return $.ajax({
     method: "POST",
     url: "/collaborative_canvas/clear_history",
@@ -137,7 +142,7 @@ function clearHistory(){
   }).done(function( data ) {
     console.log('History written, receiving updated history');
     getHistory().done( function(){
-      syncTimer = window.setTimeout(synchronizeHistory, 500);
+      syncTimerID = window.setTimeout(synchronizeHistory, 500);
     });
   });
 }
@@ -157,10 +162,10 @@ function synchronizeHistory(){
   }
   else {
     getHistory().done( function(){
-      syncTimer = window.setTimeout(synchronizeHistory, 500);
+      syncTimerID = window.setTimeout(synchronizeHistory, 500);
     });
   }
 }
 
 getHistory()
-syncTimer = window.setTimeout(synchronizeHistory, 500);
+syncTimerID = window.setTimeout(synchronizeHistory, 500);

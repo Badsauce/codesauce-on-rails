@@ -1,12 +1,15 @@
 <div id="CanvasContainer">
       <canvas id="CollaborativeCanvas"></canvas>
     </div>
+    <hr>
     <button id="clearHistory">Clear</button>
+    <button id="toggleHistoryID">Toggle History ID</button>
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>
       var canvas = document.getElementById('CollaborativeCanvas');
       var context = canvas.getContext('2d');
       var clearButton = document.getElementById('clearHistory');
+      var toggleButton = document.getElementById('toggleHistoryID');
 
       var painting = document.getElementById('CanvasContainer');
       var paint_style = getComputedStyle(painting);
@@ -14,11 +17,13 @@
       canvas.height = parseInt(paint_style.getPropertyValue('height'));
 
       var mouse = {x: 0, y: 0};
-      var clickX = new Array();
-      var clickY = new Array();
-      var clickDrag = new Array();
+
+      var myHistoryID = 1;
+      var partnerHistoryID = 2;
+
       var canvasHistory = new Array();
       var unsentHistory = new Array();
+      var partnerHistory = new Array();
       var color = '#00CC99';
       var isPainting;
       var id = 1;
@@ -38,9 +43,6 @@
 
       function addClick(x, y, dragging, brush_color)
       {
-        clickX.push(x);
-        clickY.push(y);
-        clickDrag.push(dragging);
         canvasHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
         unsentHistory.push({"x":x,"y":y,"drag":dragging,"color":brush_color})
       }
@@ -60,6 +62,18 @@
              context.moveTo(canvasHistory[i].x-1, canvasHistory[i].y);
            }
            context.lineTo(canvasHistory[i].x, canvasHistory[i].y);
+           context.closePath();
+           context.stroke();
+        }
+
+        for(var i=0; i < partnerHistory.length; i++) {
+          context.beginPath();
+          if(partnerHistory[i].drag && i){
+            context.moveTo(partnerHistory[i-1].x, partnerHistory[i-1].y);
+           }else{
+             context.moveTo(partnerHistory[i].x-1, partnerHistory[i].y);
+           }
+           context.lineTo(partnerHistory[i].x, partnerHistory[i].y);
            context.closePath();
            context.stroke();
         }
@@ -88,7 +102,7 @@
       function getHistory(){
         return $.get('/collaborative_canvas/history', function( data ) {
           if(data.history){
-            canvasHistory = data.history;
+            partnerHistory = data.history;
           }
           redraw()
           console.log('History set to server history');
@@ -119,8 +133,9 @@
       }
 
       function clearHistory(){
+        canvasHistory = new Array();
         unsentHistory = new Array();
-        unsentHistory = new Array();
+        partnerHistory = new Array();
         window.clearTimeout(syncTimer);
         return $.ajax({
           method: "POST",
@@ -135,6 +150,14 @@
         });
       }
 
+      function toggleHistoryID(){
+        var tempID = myHistoryID;
+        myHistoryID = partnerHistoryID;
+        partnerHistoryID = tempID;
+        console.log("Writing ID: "+myHistoryID+" Reading ID: "+partnerHistoryID);
+      }
+
+      toggleButton.addEventListener('click', toggleHistoryID , false);
       clearButton.addEventListener('click', clearHistory , false);
 
       function synchronizeHistory(){

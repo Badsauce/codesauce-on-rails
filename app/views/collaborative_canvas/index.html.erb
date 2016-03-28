@@ -96,13 +96,21 @@
       }
 
       function sendHistory(){
+        var sentHistoryLength = unsentHistory.length
         return $.ajax({
           method: "POST",
           url: "/collaborative_canvas/history",
           data: JSON.stringify({'id':id,'history':unsentHistory}),
           contentType: 'application/json',
         }).done(function( data ) {
-          unsentHistory = new Array();
+          if(sentHistoryLength < unsentHistory.length) {
+            console.log('Slicing '+sentHistoryLength+' from unsent history of '+unsentHistory.length);
+            unsentHistory = unsentHistory.slice(sentHistoryLength);
+          }
+          else {
+            console.log('No unsent history clearing unsent array');
+            unsentHistory = new Array();
+          }
           console.log('History written, receiving updated history');
           getHistory().done( function(){
             window.setTimeout(synchronizeHistory, 500);

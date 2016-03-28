@@ -14,12 +14,9 @@ canvas.height = parseInt(paint_style.getPropertyValue('height'));
 //Object for capturing mouse movements within the canvas
 var mouse = {x: 0, y: 0};
 
-var myHistoryID = 1;
-var partnerHistoryID = 2;
-
 var canvasHistory = new Array();
 var unsentHistory = new Array();
-var partnerHistory = new Array();
+var serverHistory = new Array();
 
 var color = '#00CC99';
 var isPainting;
@@ -52,14 +49,14 @@ function redraw(){
      context.stroke();
   }
 
-  for(var i=0; i < partnerHistory.length; i++) {
+  for(var i=0; i < serverHistory.length; i++) {
     context.beginPath();
-    if(partnerHistory[i].drag && i){
-      context.moveTo(partnerHistory[i-1].x, partnerHistory[i-1].y);
+    if(serverHistory[i].drag && i){
+      context.moveTo(serverHistory[i-1].x, serverHistory[i-1].y);
      }else{
-       context.moveTo(partnerHistory[i].x-1, partnerHistory[i].y);
+       context.moveTo(serverHistory[i].x-1, serverHistory[i].y);
      }
-     context.lineTo(partnerHistory[i].x, partnerHistory[i].y);
+     context.lineTo(serverHistory[i].x, serverHistory[i].y);
      context.closePath();
      context.stroke();
   }
@@ -73,7 +70,7 @@ var onPaint = function() {
 function getHistory(){
   return $.get('/collaborative_canvas/history', function( data ) {
     if(data.history){
-      partnerHistory = data.history;
+      serverHistory = data.history;
     }
     redraw()
     console.log('History set to server history');
@@ -106,7 +103,7 @@ function sendHistory(){
 function clearHistory(){
   canvasHistory = new Array();
   unsentHistory = new Array();
-  partnerHistory = new Array();
+  serverHistory = new Array();
   window.clearTimeout(syncTimerID);
   return $.ajax({
     method: "POST",
@@ -119,13 +116,6 @@ function clearHistory(){
       syncTimerID = window.setTimeout(synchronizeHistory, 500);
     });
   });
-}
-
-function toggleHistoryID(){
-  var tempID = myHistoryID;
-  myHistoryID = partnerHistoryID;
-  partnerHistoryID = tempID;
-  console.log("Writing ID: "+myHistoryID+" Reading ID: "+partnerHistoryID);
 }
 
 function synchronizeHistory(){

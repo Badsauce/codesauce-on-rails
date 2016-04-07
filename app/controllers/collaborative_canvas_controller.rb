@@ -4,9 +4,9 @@ class CollaborativeCanvasController < ApplicationController
   def index
   end
 
-  #GET collaborative_canvas/history
+  #GET collaborative_canvas/history/:id
   def history
-    @history = History.find(1)
+    @history = History.find(params['id'])
     render :json => @history
   end
 
@@ -19,7 +19,7 @@ class CollaborativeCanvasController < ApplicationController
     render :json => @response
   end
 
-  #POST collaborative_canvas/history
+  #POST collaborative_canvas/history/
   def add_history
     @history = History.find(params['id'])
     if @history.history

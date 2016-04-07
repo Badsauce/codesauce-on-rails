@@ -55,13 +55,8 @@ function drawHistory(history){
   }
 }
 
-var onPaint = function() {
-  context.lineTo(mouse.x, mouse.y);
-  context.stroke();
-};
-
 function getHistory(){
-  return $.get('/collaborative_canvas/history', function( data ) {
+  return $.get('/collaborative_canvas/history/'+id, function( data ) {
     if(data.history){
       serverHistory = data.history;
     }
@@ -97,7 +92,9 @@ function clearHistory(){
   canvasHistory = new Array();
   unsentHistory = new Array();
   serverHistory = new Array();
+
   window.clearTimeout(syncTimerID);
+
   return $.ajax({
     method: "POST",
     url: "/collaborative_canvas/clear_history",

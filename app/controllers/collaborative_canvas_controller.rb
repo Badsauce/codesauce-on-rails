@@ -4,6 +4,12 @@ class CollaborativeCanvasController < ApplicationController
   def index
     if params['id']
       @id = params['id']
+      history = History.find(params['id'])
+      if history.password
+        if history.password != params['password']
+          not_found
+        end
+      end
     else
       @id = 1
     end

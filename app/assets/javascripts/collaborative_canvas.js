@@ -20,7 +20,7 @@ var serverHistory = new Array();
 
 var color = '#00CC99';
 var isPainting;
-var id = 1;
+var id = $('#CollaborativeCanvas').data("history-id");
 var syncTimerID;
 
 

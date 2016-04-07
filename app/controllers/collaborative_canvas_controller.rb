@@ -2,6 +2,11 @@ class CollaborativeCanvasController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
+    if params['id']
+      @id = params['id']
+    else
+      @id = 1
+    end
   end
 
   #GET collaborative_canvas/history/:id

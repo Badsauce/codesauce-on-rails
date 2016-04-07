@@ -1,6 +1,6 @@
 <div id="CanvasContainer">
-      <canvas id="CollaborativeCanvas"></canvas>
-    </div>
-    <hr>
-    <button id="clearHistory">Clear</button>
-    <%= javascript_include_tag 'collaborative_canvas' %>
+  <canvas id="CollaborativeCanvas" data-history-id="<%= @id %>"></canvas>
+</div>
+<hr>
+<button id="clearHistory">Clear</button>
+<%= javascript_include_tag 'collaborative_canvas' %>
